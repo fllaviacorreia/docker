@@ -22,39 +22,50 @@ Este setup resolve esses problemas com um simples comando.
 
 ## 🛠 Tecnologias
 
-    - Docker
-    - Docker Compose
-    - PostgreSQL
-    - MySQL
-    - Adminer
+- Docker
+- Docker Compose
+- PostgreSQL
+- MySQL
+- Adminer
+
 
 ## 📦 Como Usar
 
 ### Clone o repositório:
 
-    - HTTPS
-    
-```git clone https://github.com/fllaviacorreia/docker.git```
+- HTTPS
+ 
+```(bash)
+git clone https://github.com/fllaviacorreia/docker.git
+```
 
-    - SSH
+- SSH
 
-```git clone git@github.com:fllaviacorreia/docker.git```
+```(bash)
+git clone git@github.com:fllaviacorreia/docker.git
+```
 
-    - Entre na pasta
+- Entre na pasta
 
-```cd docker```
+```(bash)
+cd docker
+```
 
 
 ### Crie o arquivo .env com as configurações:
 
-```cp .env.example .env```
+```(bash)
+cp .env.example .env
+```
 
 (Edite o .env se quiser mudar alguma variável.)
 
 
 ### Suba os containers:
 
-```docker compose up -d```
+```(bash)
+docker compose up -d
+```
 
 
 ### Acesse os serviços:
@@ -64,8 +75,9 @@ Para criar bancos utilizando o Adminer, acesse http://localhost:{SUA_PORTA_DO_EN
 
 ### Quando terminar, derrube os containers:
 
-```docker compose down```
-
+```(bash)
+docker compose down
+```
 
 ## 🛠 Personalização
 
