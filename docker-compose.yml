@@ -1,6 +1,6 @@
 services:
   postgres:
-    image: postgres:latest
+    image: postgres:16
     container_name: postgres_container
     restart: always
     environment:
@@ -8,39 +8,40 @@ services:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     ports:
       - "${POSTGRES_PORT}:5432"
-    networks:
-      - my_network
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    networks:
+      - my_network
 
   mysql:
-    image: mysql:latest
+    image: mysql:8
     container_name: mysql_container
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-      MYSQL_USER: ${MYSQL_USER}
-      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
     ports:
       - "${MYSQL_PORT}:3306"
-    networks:
-      - my_network
     volumes:
       - mysql_data:/var/lib/mysql
+    networks:
+      - my_network
 
   adminer:
-    image: adminer:latest
+    image: adminer:4
     container_name: adminer_container
     restart: always
     ports:
       - "${ADMINER_PORT}:8080"
+    depends_on:
+      - postgres
+      - mysql
     networks:
       - my_network
-
-networks:
-  my_network:
-    driver: bridge
 
 volumes:
   postgres_data:
   mysql_data:
+
+networks:
+  my_network:
+    driver: bridge
