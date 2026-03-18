@@ -29,6 +29,9 @@ Este setup resolve esses problemas com um simples comando.
 - PostgreSQL
 - MySQL
 - Adminer
+- Maven 3.X
+- Ant build
+- Solr
 
 ---
 

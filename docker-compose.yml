@@ -1,4 +1,20 @@
 services:
+  mysql:
+    image: mysql:8.0
+    container_name: mysql_container
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    ports:
+      - "${MYSQL_PORT}:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - my_network
+  
   postgres:
     image: postgres:16
     container_name: postgres_container
@@ -6,26 +22,47 @@ services:
     environment:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB:-dspace}
     ports:
       - "${POSTGRES_PORT}:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
     networks:
       - my_network
-
-  mysql:
-    image: mysql:8
-    container_name: mysql_container
-    restart: always
-    environment:
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-    ports:
-      - "${MYSQL_PORT}:3306"
+  maven:
+    image: maven:3.9-eclipse-temurin-17
+    container_name: maven_container
+    restart: unless-stopped
+    command: tail -f /dev/null
     volumes:
-      - mysql_data:/var/lib/mysql
+      - maven_cache:/root/.m2
     networks:
       - my_network
 
+  # Toolbox: Ant para gerar/atualizar o installer
+  ant_deploy:
+    build:
+      context: .
+      dockerfile: ant/Dockerfile
+    container_name: ant_container
+    restart: always
+    working_dir: /work
+    command: tail -f /dev/null
+    volumes:
+      - ./dspace-src:/work:rw
+      - ./dspace-installer:/dspace-installer:rw
+    networks:
+      - my_network
+    
+  solr:
+    image: solr:8
+    container_name: solr_container
+    restart: always
+    ports:
+      - "8983:8983"
+    networks:
+      - my_network
+  
   adminer:
     image: adminer:4
     container_name: adminer_container
@@ -34,13 +71,15 @@ services:
       - "${ADMINER_PORT}:8080"
     depends_on:
       - postgres
-      - mysql
     networks:
       - my_network
+    
+    
 
 volumes:
   postgres_data:
   mysql_data:
+  maven_cache:
 
 networks:
   my_network:
